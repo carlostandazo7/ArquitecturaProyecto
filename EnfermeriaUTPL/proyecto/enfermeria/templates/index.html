@@ -1,0 +1,84 @@
+{% extends "master.html" %}
+
+{% block title %}
+  Listado de Enfermeras | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<h3>Número de enfermeros: {{ numero_enfermeros }}</h3>
+
+<table id="tabla_datos">
+
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Direccion</th>
+      <th>Ciudad</th>
+      <th>Tipo</th>
+      <th>Patrones Funcionales</th>
+      <th>Necesidades Basicas</th>
+      <th>Dominios</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+
+  {% for e in enfermeros %}
+  <tr>
+    <td> {{e.nombre}}</td>
+    <td> {{e.direccion}}</td>
+    <td> {{e.ciudad}}</td>
+    <td> {{e.tipo}}</td>
+    <td>
+      <ul>
+        {% for p in e.patrones.all %}
+          <li>
+            <span>{{p.nombrePatron}} - {{p.nroPatron}} - [<a href="{% url 'editar_patron' p.id %}">Editar</a>] </span>
+            <a href="{% url 'obtener_patron' p.id %}">Ver</a> <br>
+          </li>
+        {% endfor %}
+        {# <br>[<a href="{% url 'crear_patron_enfermera' e.id%}">+ Patron Funcional</a>] #}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+        {% for n in e.necesidades.all %}
+          <li>
+            <span>{{n.nombreNecesidad}} - {{n.nroNecesidad}} - [<a href="{% url 'editar_necesidad' n.id %}">Editar</a>] </span>
+            <a href="{% url 'obtener_necesidad' n.id %}">Ver</a> <br>
+          </li>
+        {% endfor %}
+        {# <br>[<a href="{% url 'crear_necesidad_enfermera' e.id%}">+ Necesidad Basica</a>] #}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+        {% for d in e.dominios.all %}
+          <li>
+            <span>{{d.nombreDominio}} - {{d.nroDominio}} - [<a href="{% url 'editar_dominio' d.id %}">Editar</a>] </span>
+            <a href="{% url 'obtener_dominio' d.id %}">Ver</a> <br>
+          </li>
+        {% endfor %}
+      </ul>        
+        {# <br>[<a href="{% url 'crear_dominio_enfermera' e.id%}">+ Dominio</a>] #}
+    </td>
+    <td> 
+      <a href="{% url 'obtener_enfermera' e.id %}">Ver</a> <br>
+      <a href="{% url 'editar_enfermera' e.id %}">Editar</a> <br>
+      <a href="{% url 'eliminar_enfermera' e.id %}"
+      onclick="return confirm('¿Está seguro de la eliminación?')" >
+      Eliminar</a>
+    </td>
+
+  </tr>
+  {% endfor %}
+</table>
+
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('#tabla_datos').DataTable();
+  });
+</script>
+
+{% endblock %}
